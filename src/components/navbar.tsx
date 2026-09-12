@@ -23,7 +23,7 @@ const links = [
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const isAuthPage = pathname === "/login";
+  const isAuthPage = pathname === "/login" || pathname === "/registro";
 
   async function logout() {
     await api("/api/auth/logout", { method: "POST" });
@@ -36,7 +36,16 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Logo />
 
-        {!isAuthPage && (
+        {isAuthPage ? (
+          <nav className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="lg">
+              <Link href="/login">Iniciar sesión</Link>
+            </Button>
+            <Button asChild size="lg">
+              <Link href="/registro">Registrarse</Link>
+            </Button>
+          </nav>
+        ) : (
           <nav className="flex items-center gap-1">
             {links.map(({ href, label, Icon }) => {
               const activo = pathname === href || pathname.startsWith(`${href}/`);

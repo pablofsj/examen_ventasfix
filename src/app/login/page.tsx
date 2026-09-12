@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { LogIn } from "lucide-react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,13 @@ export default function LoginPage() {
               <LogIn />
               {loading ? "Ingresando…" : "Iniciar sesión"}
             </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              ¿No tienes cuenta?{" "}
+              <Link href="/registro" className="text-primary hover:underline">
+                Regístrate
+              </Link>
+            </p>
           </form>
         </CardContent>
       </Card>

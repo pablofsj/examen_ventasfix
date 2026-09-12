@@ -67,5 +67,5 @@ npm run start
 
 - `src/lib/validacion.ts` centraliza la validación de entrada (todos los campos obligatorios; email `@ventasfix.cl`; numéricos no negativos).
 - `getSessionUserId(request?)` (`src/lib/auth.ts`) acepta cookie **o** header `Authorization: Bearer`; los controladores de escritura la usan para responder 401.
-- El proxy protege `/dashboard`, `/usuarios`, `/productos`, `/clientes` y toda la API (salvo `/api/auth/login`): redirige a `/login` o responde 401. El JWT se firma con `JWT_SECRET` (HS256, `jose`).
+- El proxy protege `/dashboard`, `/usuarios`, `/productos`, `/clientes` y toda la API (salvo `/api/auth/login` y `/api/auth/registro`): redirige a `/login` o responde 401. El JWT se firma con `JWT_SECRET` (HS256, `jose`).
 - La contraseña nunca se devuelve en las respuestas de la API (los `select` excluyen `password`).

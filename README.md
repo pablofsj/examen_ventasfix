@@ -111,12 +111,13 @@ examen_ventasfix/
 │   │   ├── globals.css        # Tema oscuro + estilos base
 │   │   ├── page.tsx           # Redirige a /dashboard
 │   │   ├── login/             # Vista de inicio de sesión
+│   │   ├── registro/          # Vista de registro de usuario
 │   │   ├── dashboard/         # Resumen de conteos
 │   │   ├── usuarios/          # CRUD de usuarios (listado + nuevo + [id])
 │   │   ├── productos/         # CRUD de productos
 │   │   ├── clientes/          # CRUD de clientes
 │   │   └── api/               # Controladores (route handlers)
-│   │       ├── auth/          # login / logout
+│   │       ├── auth/          # login / registro / logout
 │   │       ├── usuarios/      # GET/POST + [id]
 │   │       ├── productos/     # GET/POST + [id]
 │   │       └── clientes/      # GET/POST + [id]
@@ -188,6 +189,7 @@ examen_ventasfix/
 
 ### Autenticación
 
+- **Registro** de usuarios con contraseña cifrada (Argon2id) y validación de email `@ventasfix.cl`.
 - **Login** con email (`@ventasfix.cl`) y contraseña.
 - Sesión mediante cookie `httpOnly` + `Secure` + `SameSite`.
 - Contraseñas cifradas con **Argon2id** (nunca se devuelven en la API).
@@ -218,6 +220,7 @@ Base URL: `http://localhost:3000`. Todos los endpoints (salvo el login) requiere
 | Método | Endpoint | Descripción | Auth |
 |---|---|---|---|
 | `POST` | `/api/auth/login` | Inicia sesión y devuelve el JWT | — |
+| `POST` | `/api/auth/registro` | Registra un usuario (contraseña cifrada) | — |
 | `POST` | `/api/auth/logout` | Cierra sesión | Sí |
 | `GET` | `/api/usuarios` | Lista usuarios | Sí |
 | `POST` | `/api/usuarios` | Crea usuario | Sí |

@@ -30,15 +30,15 @@ const RUTAS_PROTEGIDAS = [
   "/clientes",
 ];
 
-// La API está protegida salvo el login (que emite el token).
-const API_PUBLICA = ["/api/auth/login"];
+// La API está protegida salvo el login (que emite el token) y el registro.
+const API_PUBLICA = ["/api/auth/login", "/api/auth/registro"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const userId = await getUserId(request);
 
   const esApi = pathname.startsWith("/api");
-  const esLogin = pathname.startsWith("/login");
+  const esAuth = pathname.startsWith("/login") || pathname.startsWith("/registro");
   const esPublica = API_PUBLICA.some((r) => pathname === r);
   const esProtegida =
     RUTAS_PROTEGIDAS.some((r) => pathname === r || pathname.startsWith(`${r}/`)) ||
@@ -51,7 +51,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (userId && esLogin) {
+  if (userId && esAuth) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
