@@ -80,7 +80,9 @@ openssl rand -hex 32
 
 ---
 
-## Estructura (MVC)
+## Arquitectura
+
+La aplicación sigue el patrón **cliente-servidor**: el navegador (cliente) consume la API y las vistas del servidor Next.js. Internamente, el backend se organiza siguiendo **MVC**.
 
 | Capa | Ubicación |
 |---|---|
@@ -90,6 +92,95 @@ openssl rand -hex 32
 | Middleware JWT | `src/proxy.ts` |
 | Validación | `src/lib/validacion.ts` |
 | Auth | `src/lib/auth.ts` |
+
+### Estructura del proyecto
+
+```
+examen_ventasfix/
+├── prisma/
+│   ├── schema.prisma          # Modelo de datos (Prisma)
+│   ├── seed.ts                # Usuario admin inicial
+│   └── migrations/            # Migraciones SQL
+├── scripts/
+│   ├── db.mjs                 # PostgreSQL embebido (puerto 5433)
+│   └── setup-env.js           # Genera .env (DATABASE_URL + JWT_SECRET)
+├── src/
+│   ├── proxy.ts               # Middleware de autenticación JWT
+│   ├── app/
+│   │   ├── layout.tsx         # Layout raíz (navbar + footer)
+│   │   ├── globals.css        # Tema oscuro + estilos base
+│   │   ├── page.tsx           # Redirige a /dashboard
+│   │   ├── login/             # Vista de inicio de sesión
+│   │   ├── dashboard/         # Resumen de conteos
+│   │   ├── usuarios/          # CRUD de usuarios (listado + nuevo + [id])
+│   │   ├── productos/         # CRUD de productos
+│   │   ├── clientes/          # CRUD de clientes
+│   │   └── api/               # Controladores (route handlers)
+│   │       ├── auth/          # login / logout
+│   │       ├── usuarios/      # GET/POST + [id]
+│   │       ├── productos/     # GET/POST + [id]
+│   │       └── clientes/      # GET/POST + [id]
+│   ├── components/
+│   │   ├── ui/                # Componentes shadcn (Button, Card, Table, …)
+│   │   ├── forms/             # Formularios por entidad
+│   │   ├── navbar.tsx         # Navegación del backoffice
+│   │   ├── footer.tsx         # Pie con redes sociales
+│   │   ├── logo.tsx           # Logo VentasFix
+│   │   └── brand-icons.tsx    # Iconos de LinkedIn, Instagram y X
+│   └── lib/
+│       ├── prisma.ts          # Cliente Prisma (singleton + adapter)
+│       ├── auth.ts            # Hash de contraseñas + JWT
+│       ├── validacion.ts      # Validación de entrada (por entidad)
+│       ├── api.ts             # Tipos y helper de consumo de la API
+│       └── utils.ts           # Utilidades (cn)
+├── public/                    # Recursos estáticos
+├── docs/screenshots/          # Capturas de pantalla
+├── .env.example               # Variables de entorno de referencia
+└── package.json               # Scripts y dependencias
+```
+
+### Modelo de datos
+
+#### `Usuario`
+
+| Campo | Tipo | Restricciones |
+|---|---|---|
+| `id` | Int | PK, autoincrement |
+| `rut` | String | Único |
+| `nombre` | String | Obligatorio |
+| `apellido` | String | Obligatorio |
+| `email` | String | Único, `@ventasfix.cl` |
+| `password` | String | Hash Argon2id |
+
+#### `Producto`
+
+| Campo | Tipo | Restricciones |
+|---|---|---|
+| `id` | Int | PK, autoincrement |
+| `sku` | String | Único |
+| `nombre` | String | Obligatorio |
+| `descripcionCorta` | String | Obligatorio |
+| `descripcionLarga` | String | Obligatorio |
+| `imagen` | String | URL de la imagen |
+| `precioNeto` | Int | ≥ 0 |
+| `precioVenta` | Int | ≥ 0 (IVA 19 %) |
+| `stockActual` | Int | ≥ 0 |
+| `stockMinimo` | Int | ≥ 0 |
+| `stockBajo` | Int | ≥ 0 |
+| `stockAlto` | Int | ≥ 0 |
+
+#### `Cliente`
+
+| Campo | Tipo | Restricciones |
+|---|---|---|
+| `id` | Int | PK, autoincrement |
+| `rutEmpresa` | String | Único |
+| `rubro` | String | Obligatorio |
+| `razonSocial` | String | Obligatorio |
+| `telefono` | String | Obligatorio |
+| `direccion` | String | Obligatorio |
+| `nombreContacto` | String | Obligatorio |
+| `emailContacto` | String | Obligatorio |
 
 ---
 
